@@ -25,11 +25,11 @@
   <project remote="QT5" revision="zeus" name="meta-qt5" path="sources/meta-qt5" />
 
   <project remote="jocodoma" revision="zeus" name="meta-joco-imx" path="sources/meta-joco-imx">
-      <linkfile dest="README-CIMON-XPANEL.md" src="README.md"/>
+      <linkfile dest="README-JOCO-IMX.md" src="README.md"/>
   </project>
   <project remote="jocodoma" revision="zeus" name="joco-yocto-build" path="sources/base-joco">
       <linkfile dest="README-JOCO-YOCTO.md" src="README.md"/>
-      <linkfile dest="joco-setup-env" src="tools/joco-setup-env-fsl"/>
+      <linkfile dest="joco-setup-env" src="scripts/joco-setup-env-fsl.sh"/>
   </project>
 
 </manifest>

@@ -43,7 +43,7 @@
 
   <project remote="jocodoma" revision="zeus" name="joco-yocto-build" path="sources/base-joco">
       <linkfile dest="README-JOCO-YOCTO.md" src="README.md"/>
-      <linkfile dest="joco-setup-env" src="tools/joco-setup-env-imx"/>
+      <linkfile dest="joco-setup-env" src="scripts/joco-setup-env-imx.sh"/>
   </project>
 
 </manifest>
