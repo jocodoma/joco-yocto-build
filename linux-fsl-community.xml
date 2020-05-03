@@ -6,8 +6,8 @@
   <remote fetch="https://git.yoctoproject.org/git" name="yocto"/>
   <remote fetch="https://github.com/Freescale" name="freescale"/>
   <remote fetch="https://github.com/openembedded" name="oe"/>
-  <remote fetch="https://github.com/meta-qt5"  name="QT5"/>
-  <remote fetch="https://github.com/jocodoma"  name="jocodoma"/>
+  <remote fetch="https://github.com/meta-qt5" name="QT5"/>
+  <remote fetch="https://github.com/jocodoma" name="jocodoma"/>
 
   <project remote="yocto" revision="zeus" name="poky" path="sources/poky"/>
   <project remote="yocto" revision="zeus" name="meta-freescale" path="sources/meta-freescale"/>
