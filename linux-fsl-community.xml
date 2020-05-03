@@ -6,6 +6,8 @@
   <remote fetch="https://git.yoctoproject.org/git" name="yocto"/>
   <remote fetch="https://github.com/Freescale" name="freescale"/>
   <remote fetch="https://github.com/openembedded" name="oe"/>
+  <remote fetch="https://github.com/meta-qt5"  name="QT5"/>
+  <remote fetch="https://github.com/jocodoma"  name="jocodoma"/>
 
   <project remote="yocto" revision="zeus" name="poky" path="sources/poky"/>
   <project remote="yocto" revision="zeus" name="meta-freescale" path="sources/meta-freescale"/>
@@ -13,12 +15,21 @@
   <project remote="oe" revision="zeus" name="meta-openembedded" path="sources/meta-openembedded"/>
 
   <project remote="freescale" revision="zeus" name="fsl-community-bsp-base" path="sources/base">
-	<linkfile dest="README" src="README"/>
-	<linkfile dest="setup-environment" src="setup-environment"/>
+      <linkfile dest="README-FSL" src="README"/>
+      <linkfile dest="setup-environment" src="setup-environment"/>
   </project>
-
   <project remote="freescale" revision="zeus" name="meta-freescale-3rdparty" path="sources/meta-freescale-3rdparty"/>
   <project remote="freescale" revision="zeus" name="meta-freescale-distro" path="sources/meta-freescale-distro"/>
-  <project remote="freescale" revision="zeus" name="Documentation" path="sources/Documentation"/>
+  <project remote="freescale" revision="zeus" name="Documentation" path="sources/Documentation-fsl"/>
+
+  <project remote="QT5" revision="zeus" name="meta-qt5" path="sources/meta-qt5" />
+
+  <project remote="jocodoma" revision="zeus" name="meta-joco-imx" path="sources/meta-joco-imx">
+      <linkfile dest="README-CIMON-XPANEL.md" src="README.md"/>
+  </project>
+  <project remote="jocodoma" revision="zeus" name="joco-yocto-build" path="sources/base-joco">
+      <linkfile dest="README-JOCO-YOCTO.md" src="README.md"/>
+      <linkfile dest="joco-setup-env" src="tools/joco-setup-env-fsl"/>
+  </project>
 
 </manifest>
