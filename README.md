@@ -77,13 +77,13 @@ If you look at manifest files, *[linux-fsl-community.xml](linux-fsl-community.xm
 
 ```xml
 File: linux-fsl-community.xml
-<linkfile dest="joco-setup-env" src="tools/scripts/joco-setup-env-fsl"/>
+<linkfile dest="joco-setup-env" src="tools/scripts/joco-setup-env-fsl.sh"/>
 
 File: linux-imx-5.4.3-1.0.0.xml
-<linkfile dest="joco-setup-env" src="tools/scripts/joco-setup-env-imx"/>
+<linkfile dest="joco-setup-env" src="tools/scripts/joco-setup-env-imx.sh"/>
 ```
 
-If you look at both scripts closely, you will find out that *[joco-setup-env-fsl](tools/scripts/joco-setup-env-fsl)* is based on *[setup-environment](https://github.com/Freescale/fsl-community-bsp-base/blob/master/setup-environment)*, which is used by **FSL community** environment. Similarly, *[joco-setup-env-imx](tools/scripts/joco-setup-env-imx)* is based on *[imx-setup-release.sh](https://source.codeaurora.org/external/imx/meta-imx/tree/tools/imx-setup-release.sh)*, which is used by **iMX official** environment.
+If you look at both scripts closely, you will find out that *[joco-setup-env-fsl](tools/scripts/joco-setup-env-fsl.sh)* is based on *[setup-environment](https://github.com/Freescale/fsl-community-bsp-base/blob/master/setup-environment)*, which is used by **FSL community** environment. Similarly, *[joco-setup-env-imx](tools/scripts/joco-setup-env-imx.sh)* is based on *[imx-setup-release.sh](https://source.codeaurora.org/external/imx/meta-imx/tree/tools/imx-setup-release.sh)*, which is used by **iMX official** environment.
 
 Following are the things we added into the *joco-setup-env-xxx* scripts.
 
