@@ -2,7 +2,7 @@
 # Joseph Chen <jocodoma@gmail.com>
 
 if [ -z "$1" ]; then
-    echo -e "\nUsage: source joco-setup-env [build-dir]"
+    echo -e "\nUsage: source joco-setup-env-poky [build-dir]"
     return 1
 fi
 
@@ -22,6 +22,7 @@ if test $first; then
     # Update conf/bblayers.conf
     echo "" >> $BUILD_DIR/conf/bblayers.conf
     echo "# Joco Settings" >> $BUILD_DIR/conf/bblayers.conf
+    echo "BBLAYERS += \"\${TOPDIR}/../sources/meta-openembedded/meta-oe\"" >> $BUILD_DIR/conf/bblayers.conf
     echo "BBLAYERS += \"\${TOPDIR}/../sources/meta-freescale\"" >> $BUILD_DIR/conf/bblayers.conf
     echo "BBLAYERS += \"\${TOPDIR}/../sources/meta-qt5\"" >> $BUILD_DIR/conf/bblayers.conf
     echo "BBLAYERS += \"\${TOPDIR}/../sources/meta-joco-imx\"" >> $BUILD_DIR/conf/bblayers.conf
