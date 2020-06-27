@@ -30,6 +30,7 @@
   <project remote="jocodoma" revision="zeus" name="joco-yocto-build" path="sources/base-joco">
       <linkfile dest="README-JOCO-YOCTO.md" src="README.md"/>
       <linkfile dest="joco-setup-env" src="tools/scripts/joco-setup-env-fsl.sh"/>
+      <linkfile dest="joco-setup-env-poky" src="tools/scripts/joco-setup-env-poky.sh"/>
   </project>
 
 </manifest>

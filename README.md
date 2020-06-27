@@ -44,13 +44,8 @@
   ```
 
 * Example 3 - Poky Distro with Qemu Emulator  
-  Setup ***Joco*** Yocto Build with **Poky** reference distribution environment based on Yocto Project **zeus** release
   ```sh
-  HOST$ mkdir yocto-joco-poky-zeus
-  HOST$ cd yocto-joco-poky-zeus
-  HOST$ repo init -u https://github.com/jocodoma/joco-yocto-build -b zeus -m linux-poky-3.0.2.xml
-  HOST$ repo sync
-  HOST$ . joco-setup-env build
+  HOST$ . joco-setup-env-poky build-poky
   ```
 
 * To download new changes and update the working files in your local environment
