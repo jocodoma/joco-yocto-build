@@ -4,37 +4,38 @@ The idea is to save development time on kernel and root filesystem. Essentially,
 TFTP is used for loading the kernel. NFS is used to mount the root filesystem remotely from the host machine.
 
 ## Last Updated
-* Last updated: 2020/05/02 by Joseph Chen < <jocodoma@gmail.com> >
+* Last updated: 2020/06/27 by Joseph Chen < <jocodoma@gmail.com> >
 * First draft: 2020/04/22 by Joseph Chen < <jocodoma@gmail.com> >
 
-## Setup DHCP (optional)
-DHCP is optional. If your network already has a DHCP server, you can skip this section. Or, you can setup a DHCP server with another ethernet card on your host, and follow the instructions below to do it.
+## Setup DHCP
+It would be better to set up a DHCP server with another ethernet card on your host, so that you can keep the internet access available.
 
 * Install **isc-dhcp-server** on host:
   ```sh
   HOST$ sudo apt update && sudo apt install -y isc-dhcp-server
   ```
 
-* Assuming HOST IP is **192.168.1.6**, and TARGET IP is **192.168.1.7**
+* Assuming HOST IP is **192.168.3.6**, HOST Ethernet Interface: **eno1**, ROOTFS PATH on HOST: **/workdir/nfs-rootfs**
+  TARGET IP is **192.168.3.7**, TARGET MAC address: **00:04:9f:02:e3:48**
 
 * Update DHCP config file at ***/etc/dhcp/dhcpd.conf*** on the host:
   ```sh
-  subnet 192.168.1.0 netmask 255.255.255.0 {
+  subnet 192.168.3.0 netmask 255.255.255.0 {
       # default-lease-time        86400;
       # max-lease-time            86400;
-      # option broadcast-address  192.168.1.255;
+      # option broadcast-address  192.168.3.255;
       # option ip-forwarding      off;
-      # option routers            192.168.1.1;
+      # option routers            192.168.3.1;
       # option subnet-mask        255.255.255.0;
-      # range                     192.168.1.8 192.168.1.20;
+      # range                     192.168.3.8 192.168.3.20;
 
       interface                 eno1;
 
       host joco_device {
-          fixed-address         192.168.1.7;
-          hardware ethernet     00:12:34:56:78:9a;
-          option root-path      "/workdir/nfs-rootfs";
-          filename              "zImage";
+          fixed-address       192.168.3.7;
+          hardware ethernet   00:04:9f:02:e3:48;
+          option root-path    "/workdir/nfs-rootfs";
+          filename            "zImage";
     }
   }
   ```
@@ -99,28 +100,30 @@ DHCP is optional. If your network already has a DHCP server, you can skip this s
   ```
 
 ## Target Setup
-* ethaddr  
+Turn on the device and press any key to stop at u-boot stage.
+
+* ethaddr
   Check if mac address is assigned and match with the settings above in DHCP on host.
   ```sh
   u-boot$ print ethaddr
   u-boot$ setenv ethaddr 00:04:9f:02:e3:48
   ```
 
-* serverip  
-  Set serverip which is your host IP. 
+* serverip
+  Set serverip which is your host IP.
   ```sh
   u-boot$ print serverip
-  u-boot$ setenv serverip 192.168.1.6
+  u-boot$ setenv serverip 192.168.3.6
   ```
 
-* nfsroot  
+* nfsroot
   Set the path of nfsroot, which should match with the settings above in NFS on host.
   ```sh
   u-boot$ print nfsroot
   u-boot$ setenv nfsroot /workdir/nfs-rootfs
   ```
 
-* image and fdt_file  
+* image and fdt_file
   Set the file names for kernel image and dtb.
   ```sh
   u-boot$ print image
@@ -129,8 +132,9 @@ DHCP is optional. If your network already has a DHCP server, you can skip this s
   u-boot$ print fdt_file
   u-boot$ setenv fdt_file imx6q-sabresd.dtb
   ```
+  Note: If it's for solo, change to **imx6dl-sabresd.dtb**.
 
-* loadaddr and fdt_addr  
+* loadaddr and fdt_addr
   Set address for loading kernel and dtb.
   ```sh
   u-boot$ print loadaddr
@@ -140,11 +144,21 @@ DHCP is optional. If your network already has a DHCP server, you can skip this s
   u-boot$ setenv fdt_addr 0x18000000
   ```
 
-* netboot  
-  Set netboot command.
+* netboot
+  Set netboot command for both kernel and rootfs (with TFTP/kernel):
   ```sh
   u-boot$ print netboot
-  u-boot$ setenv netboot 'netboot=echo Booting from net ...; run netargs; if test ${ip_dyn} = yes; then setenv get_cmd dhcp; else setenv get_cmd tftp; fi; ${get_cmd} ${image}; if test ${boot_fdt} = yes || test ${boot_fdt} = try; then if ${get_cmd} ${fdt_addr} ${fdt_file}; then bootz ${loadaddr} - ${fdt_addr}; else if test ${boot_fdt} = try; then bootz; else echo WARN: Cannot load the DT; fi; fi; else bootz; fi;'
+  u-boot$ setenv netboot 'echo Booting from net ...; run netargs; if test ${ip_dyn} = yes; then setenv get_cmd dhcp; else setenv get_cmd tftp; fi; ${get_cmd} ${image}; if test ${boot_fdt} = yes || test ${boot_fdt} = try; then if ${get_cmd} ${fdt_addr} ${fdt_file}; then bootz ${loadaddr} - ${fdt_addr}; else if test ${boot_fdt} = try; then bootz; else echo WARN: Cannot load the DT; fi; fi; else bootz; fi;'
+  ```
+
+* devboot and netcmd
+  Set devboot and netcmd commands for rootfs only (without TFTP/kernel):
+  ```sh
+  u-boot$ print devboot
+  u-boot$ setenv devboot 'echo Booting rootfs from net ...; run netargs; if test ${boot_fdt} = yes || test ${boot_fdt} = try; then if run loadfdt; then bootz ${loadaddr} - ${fdt_addr}; else if test ${boot_fdt} = try; then bootz; else echo WARN: Cannot load the DT; fi; fi; else bootz; fi;'
+
+  u-boot$ print netcmd
+  u-boot$ setenv netcmd 'run findfdt;mmc dev ${mmcdev};if mmc rescan; then if run loadbootscript; then run bootscript; else if run loadimage; then run devboot; fi; fi; else run devboot; fi'
   ```
 
 * Save all settings in u-boot
@@ -152,22 +166,30 @@ DHCP is optional. If your network already has a DHCP server, you can skip this s
   u-boot$ saveenv
   ```
 
-* Start netboot  
-  By running the following command, it will first of all get the IP from DHCP server, and then start downloading the kernel and dtb from the host via TFTP. After that, it will load kernel and boot up the system. Finally, it will mount the rootfs remotely from the host.
+## Run netboot / netcmd / bootcmd
+Turn on the device and press any key to stop at u-boot stage.
+
+* To download **kernel** image and mount **rootfs** from host (**TFTP** + **NFS**):
   ```sh
   u-boot$ run netboot
   ```
+  By running the above command, it will first get the IP from DHCP server, and then start downloading the kernel and dtb from the host via TFTP. After that, it will load kernel and boot up the system. Finally, it will mount the rootfs remotely from the host.
 
-* Start normal boot
+* To load kernel from device and mount **rootfs** remotely from host (**NFS**):
+  ```sh
+  u-boot$ run netcmd
+  ```
+
+* To start normal boot (load everything from device):
   ```sh
   u-boot$ run bootcmd
   ```
 
 ## References
   * Manifests
-    * Boot I.MX6q SABRE over the Network using TFTP and NFS  
+    * Boot I.MX6q SABRE over the Network using TFTP and NFS
       https://community.nxp.com/docs/DOC-340583
-    * Boot from a TFTP/NFS Server  
+    * Boot from a TFTP/NFS Server
       https://developer.toradex.com/knowledge-base/boot-from-a-tftpnfs-server#Sample_DHCP_Configuration
-    * Yocto NFS & TFTP boot  
+    * Yocto NFS & TFTP boot
       https://community.nxp.com/docs/DOC-103717
