@@ -129,9 +129,18 @@ Here's the [Dockerfile](tools/docker/Dockerfile), which is based on **[crops/pok
   ```sh
   HOST$ docker build --no-cache -t joco/yocto:latest .
   ```
-  To run the container based on the image we just created:
+  To run the container based on the image we just created:  
+  (Linux)
   ```sh
   HOST$ docker run --rm -it -v /workdir:/workdir joco/yocto --workdir=/workdir
+  ```
+  (Mac)
+  ```sh
+  HOST$ docker run --rm -it -v myYoctoVolume:/workdir joco/yocto --workdir=/workdir
+  ```
+  To find out your custom volume name:
+  ```sh
+  HOST$ docker volume ls
   ```
 
 ## Poky Distro with Qemu Emulator
