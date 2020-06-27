@@ -122,23 +122,17 @@ Following are the things we added into the *joco-setup-env-xxx* scripts.
   HOST$ sudo chown -R $USER: /workdir/
   ```
 
-  * (Optional)  
-  In case if you'd like to share **DL_DIR** / **SSTATE** with multiple users on the same machine, it is recommended to use docker container for Yocto builds. Here's the Dockerfile, which is based on **[crops/poky](https://github.com/crops/poky-container)** recommended by Yocto Project. For more information, please see [Setting Up to Use CROss PlatformS (CROPS)](https://www.yoctoproject.org/docs/current/dev-manual/dev-manual.html#setting-up-to-use-crops).
-    ```sh
-    FROM crops/poky:latest
-    USER root
-    RUN apt-get update && \
-        apt-get install -y rsync python3-distutils && \
-        apt-get autoremove -y
-    ```
-    To build the image from Dockerfile:
-    ```sh
-    HOST$ docker build --no-cache -t joco/yocto:latest .
-    ```
-    To run the container based on the image we just created:
-    ```sh
-    HOST$ docker run --rm -it -v /workdir:/workdir joco/yocto --workdir=/workdir
-    ```
+* Docker (Optional)  
+Here's the [Dockerfile](tools/docker/Dockerfile), which is based on **[crops/poky](https://github.com/crops/poky-container)** recommended by Yocto Project. For more information, please see [Setting Up to Use CROss PlatformS (CROPS)](https://www.yoctoproject.org/docs/current/dev-manual/dev-manual.html#setting-up-to-use-crops).
+
+  To build the image from Dockerfile:
+  ```sh
+  HOST$ docker build --no-cache -t joco/yocto:latest .
+  ```
+  To run the container based on the image we just created:
+  ```sh
+  HOST$ docker run --rm -it -v /workdir:/workdir joco/yocto --workdir=/workdir
+  ```
 
 ## Poky Distro with Qemu Emulator
 For the **Poky distribution**, MACHINE should be set to ***qemuarm*** by default. You may change it in *conf/local.conf* file.
