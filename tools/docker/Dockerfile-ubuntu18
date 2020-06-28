@@ -1,0 +1,44 @@
+FROM ubuntu:18.04
+
+RUN apt update && \
+    DEBIAN_FRONTEND=noninteractive apt install -y \
+        gawk \
+        wget \
+        git-core \
+        subversion \
+        diffstat \
+        unzip \
+        sysstat \
+        texinfo \
+        gcc-multilib \
+        g++-multilib \
+        build-essential \
+        chrpath \
+        socat \
+        xz-utils  \
+        python \
+        xz-utils  \
+        locales \
+        cpio \
+        screen \
+        tmux \
+        sudo \
+        iputils-ping \
+        iproute2 \
+        fluxbox && \
+    /usr/sbin/locale-gen en_US.UTF-8 && \
+    echo 'dash dash/sh boolean false' | debconf-set-selections && \
+    DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
+
+RUN apt-get clean
+
+ARG USER=yoctouser
+ARG UID=1000
+ARG GID=1000
+ARG PW=yocto
+
+RUN useradd -m ${USER} --uid=${UID} && echo "${USER}:${PW}" | chpasswd
+
+USER ${UID}:${GID}
+WORKDIR /home/${USER}
+CMD /bin/bash

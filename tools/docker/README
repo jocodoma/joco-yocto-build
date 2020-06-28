@@ -1,0 +1,11 @@
+# To build the image from Dockerfile:
+
+docker build --no-cache -t joco/yocto:latest .
+docker build --no-cache -t joco/yocto:latest -f Dockerfile-crops-new .
+
+
+# To run the container based on the image we just created:
+
+(Linux)  docker run --rm -it -v /workdir:/workdir joco/yocto --workdir=/workdir
+(Mac)    docker run --rm -it -v myYoctoVolume:/workdir joco/yocto --workdir=/workdir
+
